@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from app.api.deps import SessionDep
 from app.core.security import get_password_hash
-from backend.app.models.admin import (
+from app.models.admin import (
     User,
     UserPublic,
 )

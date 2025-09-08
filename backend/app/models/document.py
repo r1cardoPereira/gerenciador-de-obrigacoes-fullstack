@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 from sqlmodel import Field, Relationship, SQLModel
-from .company import Company
+
 
 
 class Document(SQLModel, table=True):
@@ -15,4 +15,5 @@ class Document(SQLModel, table=True):
     criado_em: datetime = Field(default_factory=datetime.utcnow)
     atualizado_em: datetime = Field(default_factory=datetime.utcnow)
 
-    empresa: Company = Relationship(back_populates="documentos")
+    empresa: "Company" = Relationship(back_populates="documentos")
+    notificacoes: list["Notification"] = Relationship(back_populates="documento")

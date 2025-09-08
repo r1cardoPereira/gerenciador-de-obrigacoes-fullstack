@@ -12,7 +12,7 @@ from app.api.deps import (
 )
 from app.core.config import settings
 from app.core.security import get_password_hash, verify_password
-from backend.app.models.admin import (
+from app.models.admin import (
     Item,
     Message,
     UpdatePassword,
