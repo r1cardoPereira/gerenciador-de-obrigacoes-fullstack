@@ -1,21 +1,18 @@
-from sqlalchemy import Column, String, DateTime, ForeignKey, Text, Date
-from sqlalchemy.orm import relationship
-from uuid import uuid4
+import uuid
 from datetime import datetime
-from app.core.db import Base
+from sqlmodel import Field, Relationship, SQLModel
 from .company import Company
 
-class Document(Base):
-    __tablename__ = "documents"
 
-    id = Column(String, primary_key=True, default=lambda: str(uuid4()))
-    empresa_id = Column(String, ForeignKey("companies.id"), nullable=False)
-    nome = Column(String, nullable=False)
-    tipo = Column(String)
-    data_vencimento = Column(Date, nullable=False)
-    arquivo_url = Column(String)
-    observacoes = Column(Text)
-    criado_em = Column(DateTime, default=datetime.utcnow)
-    atualizado_em = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+class Document(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    empresa_id: uuid.UUID = Field(foreign_key="company.id")
+    nome: str
+    tipo: str | None = None
+    data_vencimento: datetime
+    arquivo_url: str | None = None
+    observacoes: str | None = None
+    criado_em: datetime = Field(default_factory=datetime.utcnow)
+    atualizado_em: datetime = Field(default_factory=datetime.utcnow)
 
-    empresa = relationship("Company", back_populates="documentos", lazy="selectin")
+    empresa: Company = Relationship(back_populates="documentos")

@@ -1,19 +1,17 @@
-from sqlalchemy import Column, String, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
-from uuid import uuid4
-from datetime import datetime
-from app.core.db import Base
+import uuid
+from sqlmodel import Field, Relationship, SQLModel
 from .document import Document
 
 
+class Notification(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    documento_id: uuid.UUID = Field(foreign_key="document.id")
+    tipo: str  # email, whatsapp
+    data_envio: str | None = None
+    status: str  # enviado, falhou
 
-class Notification(Base):
-    __tablename__ = "notifications"
+    documento: Document = Relationship(back_populates="notificacoes")
 
-    id = Column(String, primary_key=True, default=lambda: str(uuid4()))
-    documento_id = Column(String, ForeignKey("documents.id"), nullable=False)
-    tipo = Column(String)  # email, whatsapp
-    data_envio = Column(DateTime, default=datetime.utcnow)
-    status = Column(String)  # enviado, falhou
 
-    documento = relationship("Document", back_populates="notificacoes")
+
+
